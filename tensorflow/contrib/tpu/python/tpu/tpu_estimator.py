@@ -1551,10 +1551,17 @@ class _OutfeedHostCall(object):
 
       if isinstance(tensor_list_or_dict, dict):
         for (key, tensor) in six.iteritems(tensor_list_or_dict):
-          self._tensor_keys[name].append(key)
-          self._tensors[name].append(tensor)
-          self._tensor_dtypes[name].append(tensor.dtype)
-          self._tensor_shapes[name].append(tensor.shape)
+          if isinstance(tensor, dict):
+            for (k, t) in six.iteritems(tensor):
+              self._tensor_keys[name].append(k)
+              self._tensors[name].append(t)
+              self._tensor_dtypes[name].append(t.dtype)
+              self._tensor_shapes[name].append(t.shape)
+          else:
+            self._tensor_keys[name].append(key)
+            self._tensors[name].append(tensor)
+            self._tensor_dtypes[name].append(tensor.dtype)
+            self._tensor_shapes[name].append(tensor.shape)
       else:
         # List or tuple.
         self._tensor_keys[name] = None
